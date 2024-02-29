@@ -1,0 +1,96 @@
+{% include 'Pages/header.html'%}
+
+{% load static %}
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+ 
+
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Signup</title> 
+        <link rel="stylesheet" href="{% static 'css/dlogin.css'%}"> 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> 
+    </head>
+    <body>
+
+        </div>
+        <div class="regform" id="regform">
+            <h1>Signup</h1>
+        </div>
+
+
+
+
+  <form method="POST">
+    {% csrf_token %}
+    
+    {% for field in form %}
+      <p>
+        
+        {% bootstrap_field field size='small' show_label=False layout='inline'%}
+        {% comment %} {% if field.help_text %}
+          <small style="color: grey">{{ field.help_text }}</small>
+        {% endif %} {% endcomment %}
+        {% for error in field.errors %}
+          <p style="color: red">{% bootstrap_messages error%}</p>
+        {% endfor %}
+      </p>
+    {% endfor %}
+    {% bootstrap_button Signup button_type="submit" %}
+    
+
+  </form>
+  <div id="sideNav">                
+    <nav>
+      <ul>
+        <li><a href="#regform" >Login Form</a></li>
+        <li><a href="#footer" >Contact Us</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <!--the button layout -->
+  <div id="menuButton">            
+       <img src="{% static 'Images/menu.png'%}" id="menu">
+  </div>
+
+  
+
+<!--the following is our scripts -->
+<script>           
+var menuButton= document.getElementById("menuButton")
+var sideNav= document.getElementById("sideNav")
+var menu = document.getElementById("menu")
+
+sideNav.style.right=="-250px";
+
+menuButton.onclick = function(){ 
+     if(sideNav.style.right=="-250px"){sideNav.style.right="0";
+     menu.src="{% static 'Images/menu_inverse.png'%}"
+    }
+     else{ sideNav.style.right="-250px";
+     menu.src="{% static 'Images/menu.png' %}"
+         } 
+}  
+ var scroll = new SmoothScroll('a[href*="#"]', {
+     speed: 1000,
+     speedAsDuration: true
+});
+</script>
+</body>
+</html>
+
+{% endblock %}
+
+{% include 'Pages/footer.html'%}
