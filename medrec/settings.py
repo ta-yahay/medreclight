@@ -99,17 +99,6 @@ DATABASES = {
         'PASSWORD': os.environ.get('DBPASS'),
     }
 }
-CACHES = {
-        "default": {  
-            "BACKEND": "django_redis.cache.RedisCache",
-            "LOCATION": os.environ.get('CACHELOCATION'),
-            "OPTIONS": {
-                "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-    }
-}
-
-
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
