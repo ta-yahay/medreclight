@@ -1,92 +1,96 @@
-# This command prepares the required environment variables
-def-env activate-virtualenv [] {
+# virtualenv activation module
+# Activate with `overlay use activate.nu`
+# Deactivate with `deactivate`, as usual
+#
+# To customize the overlay name, you can call `overlay use activate.nu as foo`,
+# but then simply `deactivate` won't work because it is just an alias to hide
+# the "activate" overlay. You'd need to call `overlay hide foo` manually.
+
+export-env {
     def is-string [x] {
         ($x | describe) == 'string'
     }
 
-    def has-env [name: string] {
-        $name in (env).name
+    def has-env [...names] {
+        $names | each {|n|
+            $n in $env
+        } | all {|i| $i == true}
     }
 
-    let is-windows = ((sys).host.name | str downcase) == 'windows'
-    let virtual-env = 'D:\4th year data\my gp\last\New folder\medrecgp\med'
+    # Emulates a `test -z`, but btter as it handles e.g 'false'
+    def is-env-true [name: string] {
+      if (has-env $name) {
+        # Try to parse 'true', '0', '1', and fail if not convertible
+        let parsed = (do -i { $env | get $name | into bool })
+        if ($parsed | describe) == 'bool' {
+          $parsed
+        } else {
+          not ($env | get -i $name | is-empty)
+        }
+      } else {
+        false
+      }
+    }
+
+    let virtual_env = 'C:\Users\DELL\distributive\medrec_test\medreclight\medreclight\med'
     let bin = 'Scripts'
-    let path-sep = ';'
-    let path-name = if $is-windows {
-        if (has-env 'Path') {
+
+    let is_windows = ($nu.os-info.family) == 'windows'
+    let path_name = (if (has-env 'Path') {
             'Path'
         } else {
             'PATH'
         }
-    } else {
-        'PATH'
-    }
-
-    let old-path = (
-        if $is-windows {
-            if (has-env 'Path') {
-                $env.Path
-            } else {
-                $env.PATH
-            }
-        } else {
-            $env.PATH
-        } | if (is-string $in) {
-            # if Path/PATH is a string, make it a list
-            $in | split row $path-sep | path expand
-        } else {
-            $in
-        }
     )
 
-    let venv-path = ([$virtual-env $bin] | path join)
-    let new-path = ($old-path | prepend $venv-path | str collect $path-sep)
+    let venv_path = ([$virtual_env $bin] | path join)
+    let new_path = ($env | get $path_name | prepend $venv_path)
 
-    # Creating the new prompt for the session
-    let virtual-prompt = if ('' == '') {
-        $'(char lparen)($virtual-env | path basename)(char rparen) '
+    # If there is no default prompt, then use the env name instead
+    let virtual_env_prompt = (if ('' | is-empty) {
+        ($virtual_env | path basename)
     } else {
-        '() '
+        ''
+    })
+
+    let new_env = {
+        $path_name         : $new_path
+        VIRTUAL_ENV        : $virtual_env
+        VIRTUAL_ENV_PROMPT : $virtual_env_prompt
     }
 
-    # Back up the old prompt builder
-    let old-prompt-command = if (has-env 'VIRTUAL_ENV') && (has-env '_OLD_PROMPT_COMMAND') {
-        $env._OLD_PROMPT_COMMAND
+    let new_env = (if (is-env-true 'VIRTUAL_ENV_DISABLE_PROMPT') {
+      $new_env
     } else {
-        if (has-env 'PROMPT_COMMAND') {
-            $env.PROMPT_COMMAND
-        } else {
-            ''
-        }
-    }
+      # Creating the new prompt for the session
+      let virtual_prefix = $'(char lparen)($virtual_env_prompt)(char rparen) '
 
-    # If there is no default prompt, then only the env is printed in the prompt
-    let new-prompt = if (has-env 'PROMPT_COMMAND') {
-        if ($old-prompt-command | describe) == 'block' {
-            { $'($virtual-prompt)(do $old-prompt-command)' }
-        } else {
-            { $'($virtual-prompt)($old-prompt-command)' }
-        }
-    } else {
-        { $'($virtual-prompt)' }
-    }
+      # Back up the old prompt builder
+      let old_prompt_command = (if (has-env 'PROMPT_COMMAND') {
+              $env.PROMPT_COMMAND
+          } else {
+              ''
+        })
 
-    # Environment variables that will be batched loaded to the virtual env
-    let new-env = {
-        $path-name          : $new-path
-        VIRTUAL_ENV         : $virtual-env
-        _OLD_VIRTUAL_PATH   : ($old-path | str collect $path-sep)
-        _OLD_PROMPT_COMMAND : $old-prompt-command
-        PROMPT_COMMAND      : $new-prompt
-        VIRTUAL_PROMPT      : $virtual-prompt
-    }
+      let new_prompt = (if (has-env 'PROMPT_COMMAND') {
+          if 'closure' in ($old_prompt_command | describe) {
+              {|| $'($virtual_prefix)(do $old_prompt_command)' }
+          } else {
+              {|| $'($virtual_prefix)($old_prompt_command)' }
+          }
+      } else {
+          {|| $'($virtual_prefix)' }
+      })
 
-    # Activate the environment variables
-    load-env $new-env
+      $new_env | merge {
+        PROMPT_COMMAND      : $new_prompt
+        VIRTUAL_PREFIX      : $virtual_prefix
+      }
+    })
+
+    # Environment variables that will be loaded as the virtual env
+    load-env $new_env
 }
 
-# Activate the virtualenv
-activate-virtualenv
-
-alias pydoc = python -m pydoc
-alias deactivate = source 'D:\4th year data\my gp\last\New folder\medrecgp\med\Scripts\deactivate.nu'
+export alias pydoc = python -m pydoc
+export alias deactivate = overlay hide activate

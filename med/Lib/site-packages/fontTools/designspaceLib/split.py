@@ -7,10 +7,11 @@ from __future__ import annotations
 import itertools
 import logging
 import math
-from typing import Any, Callable, Dict, Iterator, List, Tuple
+from typing import Any, Callable, Dict, Iterator, List, Tuple, cast
 
 from fontTools.designspaceLib import (
     AxisDescriptor,
+    AxisMappingDescriptor,
     DesignSpaceDocument,
     DiscreteAxisDescriptor,
     InstanceDescriptor,
@@ -21,9 +22,9 @@ from fontTools.designspaceLib import (
 )
 from fontTools.designspaceLib.statNames import StatNames, getStatNames
 from fontTools.designspaceLib.types import (
+    ConditionSet,
     Range,
     Region,
-    ConditionSet,
     getVFUserRegion,
     locationInRegion,
     regionInRegion,
@@ -87,11 +88,18 @@ def splitInterpolable(
     discreteAxes = []
     interpolableUserRegion: Region = {}
     for axis in doc.axes:
-        if isinstance(axis, DiscreteAxisDescriptor):
+        if hasattr(axis, "values"):
+            # Mypy doesn't support narrowing union types via hasattr()
+            # TODO(Python 3.10): use TypeGuard
+            # https://mypy.readthedocs.io/en/stable/type_narrowing.html
+            axis = cast(DiscreteAxisDescriptor, axis)
             discreteAxes.append(axis)
         else:
+            axis = cast(AxisDescriptor, axis)
             interpolableUserRegion[axis.name] = Range(
-                axis.minimum, axis.maximum, axis.default
+                axis.minimum,
+                axis.maximum,
+                axis.default,
             )
     valueCombinations = itertools.product(*[axis.values for axis in discreteAxes])
     for values in valueCombinations:
@@ -191,7 +199,11 @@ def _extractSubSpace(
 
     for axis in doc.axes:
         range = userRegion[axis.name]
-        if isinstance(range, Range) and isinstance(axis, AxisDescriptor):
+        if isinstance(range, Range) and hasattr(axis, "minimum"):
+            # Mypy doesn't support narrowing union types via hasattr()
+            # TODO(Python 3.10): use TypeGuard
+            # https://mypy.readthedocs.io/en/stable/type_narrowing.html
+            axis = cast(AxisDescriptor, axis)
             subDoc.addAxis(
                 AxisDescriptor(
                     # Same info
@@ -213,6 +225,44 @@ def _extractSubSpace(
                     axisLabels=None,
                 )
             )
+
+    subDoc.axisMappings = mappings = []
+    subDocAxes = {axis.name for axis in subDoc.axes}
+    for mapping in doc.axisMappings:
+        if not all(axis in subDocAxes for axis in mapping.inputLocation.keys()):
+            continue
+        if not all(axis in subDocAxes for axis in mapping.outputLocation.keys()):
+            LOGGER.error(
+                "In axis mapping from input %s, some output axes are not in the variable-font: %s",
+                mapping.inputLocation,
+                mapping.outputLocation,
+            )
+            continue
+
+        mappingAxes = set()
+        mappingAxes.update(mapping.inputLocation.keys())
+        mappingAxes.update(mapping.outputLocation.keys())
+        for axis in doc.axes:
+            if axis.name not in mappingAxes:
+                continue
+            range = userRegion[axis.name]
+            if (
+                range.minimum != axis.minimum
+                or (range.default is not None and range.default != axis.default)
+                or range.maximum != axis.maximum
+            ):
+                LOGGER.error(
+                    "Limiting axis ranges used in <mapping> elements not supported: %s",
+                    axis.name,
+                )
+                continue
+
+        mappings.append(
+            AxisMappingDescriptor(
+                inputLocation=mapping.inputLocation,
+                outputLocation=mapping.outputLocation,
+            )
+        )
 
     # Don't include STAT info
     # subDoc.locationLabels = doc.locationLabels
@@ -341,9 +391,10 @@ def _extractSubSpace(
 def _conditionSetFrom(conditionSet: List[Dict[str, Any]]) -> ConditionSet:
     c: Dict[str, Range] = {}
     for condition in conditionSet:
+        minimum, maximum = condition.get("minimum"), condition.get("maximum")
         c[condition["name"]] = Range(
-            condition.get("minimum", -math.inf),
-            condition.get("maximum", math.inf),
+            minimum if minimum is not None else -math.inf,
+            maximum if maximum is not None else math.inf,
         )
     return c
 
