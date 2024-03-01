@@ -77,16 +77,7 @@
                                         <td><p> {{gluecose.date|date:"d m"}} {{gluecose.date|time:"H:i" }}</p></td>
                                         {% endfor %}
                                     </tr><tr>
-                                        <td><p> BMI Level  <p></td>          
-                                        {% for bmi in bmi|slice:"5"%}                          
-                                        <td><p> {{bmi.value}}</p></td>
-                                        {% endfor %}
-                                    </tr><tr>
-                                        <td><p> Time  <p></td>
-                                            {% for bmi in bmi|slice:"5"%}                          
-                                            <td><p> {{bmi.date|date:"d m"}} {{bmi.date|time:"H:i" }}</p></td>
-                                            {% endfor %}
-                                    </tr>
+                                       
                                 </tbody>
                             </table>
                             <form>
