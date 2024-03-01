@@ -14,8 +14,6 @@ from pathlib import Path
 import os
 from pickle import TRUE
 from dotenv import load_dotenv
-# import django_heroku
-# import rest_framework
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / '.env')
@@ -24,24 +22,19 @@ load_dotenv(BASE_DIR / '.env')
 
 
 # SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.environ('SECRET_KEY')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
-
+DEBUG = False
 
 # ALLOWED_HOSTS = ['medrecgp.herokuapp.com']
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
-CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(' ')
+# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
+ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
 
-SECURE_SSL_REDIRECT = \
-    os.getenv('SECURE_SSL_REDIRECT', '0').lower() in ['true', 't', '1']
-if SECURE_SSL_REDIRECT:
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
+CSRF_TRUSTED_ORIGINS = ['https://'+os.environ['WEBSITE_HOSTNAME']]
 # Application definition
 
 INSTALLED_APPS = [
@@ -52,8 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    
     ## my apps
     'Doctor',
     'Patient',
@@ -63,8 +54,6 @@ INSTALLED_APPS = [
     'bootstrap4',
     'crispy_forms',
     'django_filters',
-    
-    
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -103,46 +92,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'medrec.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'OPTIONS': {
-#             'read_default_file': '/path/to/my.cnf',
-#         },
-#     }
-# }
-
-
-
+connection_string=os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
+parameters={pair.split('='):pair.split('=')[1] for pair in connection_string.split(' ')}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'medrec',
-        'USER': 'postgres',
-        'PASSWORD': 'yahyakhalaf',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': parameters['dbname'],
+        'HOST': parameters['host'],
+        'USER':parameters['user'],
+        'PASSWORD': parameters['password']
     }
 }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DBNAME'),
-        'HOST': os.environ.get('DBHOST'),
-        'USER': os.environ.get('DBUSER'),
-        'PASSWORD': os.environ.get('DBPASS'),
-        'OPTIONS': {'sslmode': 'require'},
-    }
-}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
