@@ -24,56 +24,7 @@ def login(request):
 
 def phome(request):
     
-    return render (request,'Pages/phome.html',{})
-
-
-# def plogin(request):
-#     if request.method == 'POST':
-#         username=request.POST['pusername']
-#         password=request.POST['ppassword']
-#         user=authenticate(request, username=username , password=password)
-            
-#         if user is not None:
-#             login (request,user)
-#             return redirect ('pprofile')
-#         else:
-#             messages.success(request , ("username or password is not correct, please try again or signup..."))
-#             return redirect ('plogin')
-        
-#     else:
-#         return render (request,'authenticate/plogin.html',{})    
-
-
-
-
-# def plogout(request):
-#     logout (request)
-#     messages.success(request,("you logged out"))
-#     return redirect ('home')     
-
-
-
-# def signup(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             username = form.cleaned_data ['username']
-#             password = form.cleaned_data['password1']
-#             user=authenticate(username = username , password = password)
-#             login (request,user)
-#             return redirect ('pprofile')
-        
-#     else:
-#         form = UserCreationForm()
-        
-#     return render (request,'pages/signup.html' ,{'form':form, })     
-    
-    
-    
-    
-    
-    
+    return render (request, 'Pages/phome.html',{})
     
     
     
