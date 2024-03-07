@@ -19,16 +19,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
+SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
 # SECRET_KEY =os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-SECRET_KEY = [os.environ['SECRET']]
-CSRF_TRUSTED_ORIGINS=['https://'+ os.environ['WEBSITE_HOSTNAME']]
+# SECRET_KEY = [os.environ['SECRET']]
+# CSRF_TRUSTED_ORIGINS=['https://'+ os.environ['WEBSITE_HOSTNAME']]
 
 DEBUG = True
 
-# ALLOWED_HOSTS = ['medrecgp.herokuapp.com']
-ALLOWED_HOSTS =[os.environ['WEBSITE_HOSTNAME']]
+ALLOWED_HOSTS = ['https://lab3ta.azurewebsites.net']
+# ALLOWED_HOSTS =[os.environ['WEBSITE_HOSTNAME']]
 
 
 
@@ -93,20 +93,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'medrec.wsgi.application'
 
-connection_string =os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
-parameters={pair.split('='):pair.split('=')[1]for pair in connection_string.split(' ')}
+# connection_string =os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
+# parameters={pair.split('='):pair.split('=')[1]for pair in connection_string.split(' ')}
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': parameters['dbname'],
+#         'USER': parameters['user'],
+#         'PASSWORD': parameters['password'],
+#         'HOST': parameters['host'],
+#     }
+# } 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': parameters['dbname'],
-        'USER': parameters['user'],
-        'PASSWORD': parameters['password'],
-        'HOST': parameters['host'],
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": "mydatabase",
     }
-} 
-
+}
 
 
 # DATABASES = {
@@ -168,8 +173,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 # STATIC_ROOT =os.path.join(BASE_DIR , 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT =os.path.join(BASE_DIR , 'staticfiles')
+STATIC_ROOT =BASE_DIR / 'staticfiles'
 STATIC_URL = 'static/'
+
 STATICFILES_DIRS=[
     os.path.join(BASE_DIR,'medrec/static')
 ]
@@ -198,6 +204,3 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
-
-# Activate Django-Heroku.
-# django_heroku.settings(locals())
