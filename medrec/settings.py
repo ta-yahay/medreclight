@@ -13,28 +13,24 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 from pickle import TRUE
-from dotenv import load_dotenv
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / '.env')
+SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
 
-
-
-
-# SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
-SECRET_KEY = os.environ('SECRET_KEY')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
+
 # SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
+# SECRET_KEY =os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = False
+DEBUG = True
 
 # ALLOWED_HOSTS = ['medrecgp.herokuapp.com']
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
-ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
+ALLOWED_HOSTS = []
 
-CSRF_TRUSTED_ORIGINS = ['https://'+os.environ['WEBSITE_HOSTNAME']]
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    
     ## my apps
     'Doctor',
     'Patient',
@@ -54,6 +52,8 @@ INSTALLED_APPS = [
     'bootstrap4',
     'crispy_forms',
     'django_filters',
+    
+    
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -92,17 +92,37 @@ TEMPLATES = [
 WSGI_APPLICATION = 'medrec.wsgi.application'
 
 
-connection_string=os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
-parameters={pair.split('='):pair.split('=')[1] for pair in connection_string.split(' ')}
+# Database
+# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#             'read_default_file': '/path/to/my.cnf',
+#         },
+#     }
+# }
+
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': parameters['dbname'],
-        'HOST': parameters['host'],
-        'USER':parameters['user'],
-        'PASSWORD': parameters['password']
+        'NAME': 'medrec',
+        'USER': 'postgres',
+        'PASSWORD': 'yahyakhalaf',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
