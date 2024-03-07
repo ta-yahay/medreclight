@@ -2,12 +2,13 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from medrec import *
 
 
 def main():
     """Run administrative tasks."""
-    settings_module='medrec.azuredep' if 'WEBSITE_HOSTNAME' in os.environ else 'medrec.settings'
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
+    # settings_module= 'medrec.azuredep' if 'WEBSITE_HOSTNAME' in os.environ else 'medrec.settings'
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'medrec.settings')
     # os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'medrec.settings')
     try:
         from django.core.management import execute_from_command_line

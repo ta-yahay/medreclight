@@ -14,7 +14,6 @@ from pathlib import Path
 import os
 from pickle import TRUE
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -23,11 +22,13 @@ SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
 # SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
 # SECRET_KEY =os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
+SECRET_KEY = [os.environ['SECRET']]
+CSRF_TRUSTED_ORIGINS=['https://'+ os.environ['WEBSITE_HOSTNAME']]
 
 DEBUG = True
 
 # ALLOWED_HOSTS = ['medrecgp.herokuapp.com']
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS =[os.environ['WEBSITE_HOSTNAME']]
 
 
 
@@ -61,13 +62,14 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    
 
 ]
 
@@ -91,35 +93,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'medrec.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'OPTIONS': {
-#             'read_default_file': '/path/to/my.cnf',
-#         },
-#     }
-# }
-
+connection_string =os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
+parameters={pair.split('='):pair.split('=')[1]for pair in connection_string.split(' ')}
 
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'medrec',
-        'USER': 'postgres',
-        'PASSWORD': 'yahyakhalaf',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': parameters['dbname'],
+        'USER': parameters['user'],
+        'PASSWORD': parameters['password'],
+        'HOST': parameters['host'],
     }
-}
+} 
+
+
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'medrec',
+#         'USER': 'postgres',
+#         'PASSWORD': 'yahyakhalaf',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
 #     }
 # }
 
@@ -164,11 +161,13 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Static files (CSS, JavaScript, Images)
 
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
+# STATIC_ROOT =os.path.join(BASE_DIR , 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT =os.path.join(BASE_DIR , 'staticfiles')
 STATIC_URL = 'static/'
 STATICFILES_DIRS=[
