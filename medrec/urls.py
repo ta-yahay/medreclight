@@ -18,10 +18,10 @@ from django.urls import path
 from django.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
-
+from Pages.views import home
 urlpatterns = [
-   
-    path ('', include('Pages.urls')),
+    path('', home, name='home'),
+    # path ('', include('Pages.urls')),
     path ('patient', include('Patient.urls')),
     path ('', include('django.contrib.auth.urls')),
     path ('', include('Doctor.urls')),
