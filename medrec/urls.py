@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from Pages.views import home
 urlpatterns = [
     path('', home, name='home'),
-    # path ('', include('Pages.urls')),
+    path ('', include('Pages.urls')),
     path ('patient', include('Patient.urls')),
     path ('', include('django.contrib.auth.urls')),
     path ('', include('Doctor.urls')),
