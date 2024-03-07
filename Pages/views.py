@@ -24,7 +24,7 @@ def login(request):
 
 def phome(request):
     
-    return render (request,'pages/phome.html',{})
+    return render (request,'Pages/phome.html',{})
 
 
 # def plogin(request):
