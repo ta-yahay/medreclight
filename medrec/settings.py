@@ -31,8 +31,13 @@ ALLOWED_HOSTS = ['http://lab3ta.azurewebsites.net/',
  'http://lab3ta.azurewebsites.net',
  'lab3ta.azurewebsites.net/',
  'lab3ta.azurewebsites.net','127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['http://lab3ta.azurewebsites.net/',
+ 'http://lab3ta.azurewebsites.net',
+ 'lab3ta.azurewebsites.net/',
+ 'lab3ta.azurewebsites.net','127.0.0.1']
+
+
 # ALLOWED_HOSTS =[os.environ['WEBSITE_HOSTNAME']]
-CSRF_TRUSTED_ORIGINS = ['http://lab3ta.azurewebsites.net']
 
 
 # Application definition
