@@ -8,21 +8,10 @@ from accounts.models import Profile
 
 # Create your views here.
 
-# def myrecords(request):
-#     bloodp= BloodP.objects.filter(user=request.user)
-#     bmi= Bmi.objects.filter(user=request.user)
-#     glucose= Glucose.objects.filter(user=request.user)
-
-#     return render(request , 'readings/myrecords.html' ,{
-#         'bloodp': bloodp,
-#         'bmi': bmi ,
-#         'gluecose':glucose})
 def editrecord(request):
-    # profile=Profile.objects.get(user=request.user)
     if request.method=="POST":
-        # profile=Profile.objects.get(user=request.user)
-        blood=BP_form(request.POST,instance=request.user)
-        glucose=Glucose_form(request.POST,instance=request.user)  
+        blood=BP_form(request.POST)
+        glucose=Glucose_form(request.POST)  
         if blood.is_valid:
             blood.save()
             blood.user =request.user

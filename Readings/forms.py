@@ -7,9 +7,9 @@ from .models import BloodP,Glucose
 class BP_form (forms.ModelForm):
     class Meta:
         model=BloodP
-        fields=['value','date','image']
+        fields=['value','date']
         
 class Glucose_form (forms.ModelForm):
     class Meta:
         model=Glucose
-        fields=['value','date','image']
+        fields=['value','date']

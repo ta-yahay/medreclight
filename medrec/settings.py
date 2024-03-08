@@ -29,8 +29,9 @@ DEBUG = True
 # ALLOWED_HOSTS =['http://'+ os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
 CSRF_TRUSTED_ORIGINS = ['http://'+ os.environ['WEBSITE_HOSTNAME']]if 'WEBSITE_HOSTNAME' in os.environ else []
 # http://lab3ta.azurewebsites.net/
-ALLOWED_HOSTS = ['lab3ta.azurewebsites.net','127.0.0.1']
-#  'http://lab3ta.azurewebsites.net',
+# 'lab3ta.azurewebsites.net'
+ALLOWED_HOSTS = ['http://lab3ta.azurewebsites.net','127.0.0.1']
+#  ,
 #  'lab3ta.azurewebsites.net/',
 #  'lab3ta.azurewebsites.net'
 # CSRF_TRUSTED_ORIGINS = ['http://lab3ta.azurewebsites.net/',
