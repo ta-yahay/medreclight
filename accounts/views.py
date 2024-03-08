@@ -11,12 +11,12 @@ from .forms import Signupform, Userform ,Profileform
 from django import forms
 from .models import Profile
 from Patient.models import Patient
+from Patient.forms import Patientform
 import pandas
 from django.views.generic import ListView
 from Readings.utils import get_chart
-from Readings.models import BloodP, Bmi
-from Readings.models import Glucose
 from Readings.models import BloodP
+from Readings.models import Glucose
 from Readings.urls import urlpatterns
 # Create your views here.
 def signup(request):
@@ -35,48 +35,40 @@ def signup(request):
 
 def profile(request):
     BP_set=BloodP.objects.filter(user=request.user)
-    BMI_set=Bmi.objects.filter(user=request.user)
     glu_set=Glucose.objects.filter(user=request.user)
     BP_ordered=BP_set.order_by('date')[:500]
-    BMI_ordered=BMI_set.order_by('date')[:500]
     glu_ordered=glu_set.order_by('date')[:500]
     profile=Profile.objects.get(user=request.user)
     return render(request , 'accounts/profile.html',{
         'profile':profile,
         'BP':BP_ordered,
-        'BMI':BMI_ordered,
         'glucose':glu_ordered})
 
 
 
 def edit_profile(request):
     profile=Profile.objects.get(user=request.user)
+    patient=Patient.objects.get(user=request.user)
     if request.method=="POST":
         userform=Userform(request.POST,instance=request.user)
         profileform=Profileform(request.POST, instance=profile)  
-        if userform.is_valid and profileform.is_valid:
+        patientform=Patientform(request.POST,instance=patient)
+        if userform.is_valid and profileform.is_valid and  patientform.is_valid:
             userform.save()
             change=profileform.save(commit=False)
             change.user=request.user
             change.save()
-            return render(request , 'accounts/profile.html',{'profile':profile})
-
+            change=patientform.save(commit=False)
+            change.user=request.user
+            change.save()
+            return render(request , 'accounts/profile.html',{'profile':profile, 'patient':patient})
     else:
         userform=Userform(instance=request.user)
-        profileform=Profileform(instance=profile)    
+        profileform=Profileform(instance=profile)   
+        patientform=Patientform(instance=patient)    
+ 
+    return render (request , 'accounts/edit_profile.html',{'userform':userform, 'profileform':profileform, 'patientform':patientform})
 
-
-    return render (request , 'accounts/edit_profile.html',{'userform':userform, 'profileform':profileform})
-
-def patient_profile(request):
-    if request.method == "GET":
-        dsearch=request.GET['dsearch'] 
-        profile=Profile.objects.filter(ssn =dsearch)
-        
-        return render (request,'accounts/patient_profile.html',{'profile':profile})
-    else:
-      return render (request,'accounts/profile.html',{})
-        
     
 
 

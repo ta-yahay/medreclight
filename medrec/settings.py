@@ -46,9 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     ## my apps
-    'Doctor',
     'Patient',
-    'Pages',
+    'Pages', 
     'Readings',
     'accounts',
     'bootstrap4',

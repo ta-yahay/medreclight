@@ -17,65 +17,10 @@ from django.contrib.auth.forms import UserCreationForm
 
 
 def home(request):
-    return render (request,'Pages/home.html',{})
+    return render (request,'Pages/phome.html',{})
 
 def login(request):
     return render (request,'registration/login.html',{})
 
-def phome(request):
-    
-    return render (request, 'Pages/phome.html',{})
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    # submitted = False
-    # if request.method == 'POST':
-    #     form =Patient_infoForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         messages.success(request, 'Account created successfully')
-        
-    # else :
-    #     form =Patient_infoForm
-    #     if 'submitted' in request.GET:
-    #         submitted=True
-
-    # form =Patient_infoForm
-    # return render (request,'pages/signup.html' ,{'form':form , 'submitted':submitted})     
-        
-
-    # p_fname= request.POST.get('first_name')
-    # p_lname = request.POST.get('last_name')
-    # p_email= request.POST.get('email')
-    # p_phone= request.POST.get('phone')
-    # p_city= request.POST.get('city')
-    # p_address= request.POST.get('address')
-    # p_height= request.POST.get('height')
-    # p_weight= request.POST.get('weight')
-    # p_age= request.POST.get('Age')
-    # p_diatype= request.POST.get('Diabetestype')
-    # p_gender= request.POST.get('gender')
-    
-    # b= Patient_info(p_fname=p_fname,p_lname=p_lname ,p_email= p_email,p_phone=p_phone,p_city=p_city,p_address=p_address,p_height=p_height, p_weight=p_weight,p_age= p_age,p_diatype=p_diatype,p_gender=p_gender)
-    # # data= plogin(p_fname,p_lname ,p_email,p_phone,p_city,p_address,p_height, p_weight,p_dateofbirth,p_diatype,p_gender)
-    # b.save()
-    
-    # p_ssn = request.POST.get('ssn')
-    # p_password = request.POST.get('password')
-    
-    # a= Plogin (p_ssn=p_ssn,p_password=p_password)
-    # a.save()
-
-# Create your views here.
+def signup(request):
+    return render (request,'registration/signup.html',{})

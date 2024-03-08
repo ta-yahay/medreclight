@@ -25,11 +25,16 @@ class Patient (models.Model):
         (type1,'type1'),
         (type2,'type2')
     ]
-    height= models.IntegerField(blank=True)
-    weight=models.IntegerField(blank=True)
+    height= models.IntegerField(null=True)
+    weight=models.IntegerField(null=True)
+    age=models.IntegerField(null=True)
     diatype=models.CharField (choices=diatype_choices,blank=True,null=True ,max_length=20)
     def __str__ (self):
         return str(self.user)
+@receiver(post_save, sender=User)
+def create_user_patient(sender, instance, created, **kwargs):
+    if created:
+        Patient.objects.create(user=instance)
 
     
     

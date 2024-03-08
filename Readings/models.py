@@ -21,30 +21,19 @@ def image_upload(instance,filename):
 
 # Create your models here.   
 class BloodP(models.Model):
-    user =models.ForeignKey(User ,on_delete=models.CASCADE ,null=True)
+    user =models.ForeignKey(User ,on_delete=models.CASCADE)
     image= models.ImageField(upload_to=image_upload,blank=True,null=True)
     value= models.DecimalField( max_digits=5, decimal_places=2, null=False)
-    date=models.DateTimeField(blank=True)
+    date=models.DateTimeField(default=datetime.now,blank=True)
     def __repr__ (self):
         return "{}-{}-{}".format(self.user,self.value, self.date)
 
 
 
 class Glucose(models.Model):
-    user =models.ForeignKey(User ,on_delete=models.CASCADE,null=True)
+    user =models.ForeignKey(User ,on_delete=models.CASCADE)
     image= models.ImageField(upload_to=image_upload,blank=True,null=True)
     value=models.DecimalField( max_digits=5, decimal_places=2, null=False)
-    date=models.DateTimeField( blank=True)
-    def __str__ (self):
-        return str(self.user)  
-
-
-
-
-class Bmi(models.Model):
-    user =models.ForeignKey(User ,on_delete=models.CASCADE,null=True)
-    image= models.ImageField(upload_to=image_upload,blank=True,null=True)
-    value=models.DecimalField( max_digits=5, decimal_places=2, null=False)
-    date=models.DateTimeField(blank=True)
+    date=models.DateTimeField(default=datetime.now, blank=True)
     def __str__ (self):
         return str(self.user)  

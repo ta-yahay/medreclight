@@ -1,5 +1,5 @@
 import uuid, base64
-from .models import BloodP,Bmi,Glucose
+from .models import BloodP,Glucose
 from io import BytesIO
 from matplotlib import pyplot
 

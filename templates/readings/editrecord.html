@@ -44,18 +44,12 @@
                                 {{"Blood Pressure"}}
                                 {%bootstrap_form blood layout='inline'%}
                                 {% bootstrap_button "Save" button_type="submit" %}
-                            </form> 
-                            <form method="POST" enctype="multipart/form-data" >
-                                {% csrf_token %}
-                                {{"BMI level"}}
-                                {%bootstrap_form bmi%}
-                                {% bootstrap_button "Save" button_type="submit" %} 
+                            </form>
                             <form method="POST" enctype="multipart/form-data" >
                                 {% csrf_token %}
                                 {{"Glucose level"}}
                                 {%bootstrap_form gluecose%}
-                                {% bootstrap_button "Save" button_type="submit" %} 
-                                
+                                {% bootstrap_button "Save" button_type="submit" %}
                               </form> 
                         </div>
                         
