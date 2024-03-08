@@ -1,6 +1,6 @@
-{% include 'Pages/header.html'%}
 
 {% load static %}
+
 {# Load the tag library #}
 {% load bootstrap4 %}
 
@@ -9,49 +9,49 @@
 {% bootstrap_javascript jquery='full' %}
 
 {# Display django.contrib.messages as Bootstrap alerts #}
-{% bootstrap_messages %}
- 
-
-
-{% block content %}
+{% bootstrap_messages %}{% block content %}
 
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Signup</title> 
-        <link rel="stylesheet" href="{% static 'css/dlogin.css'%}"> 
+        <title>Login page</title> 
+        <link rel="stylesheet" href="{% static 'css/login.css'%}"> 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" /> 
     </head>
     <body>
-
+        <div class="header">
+            <img src="{%static 'Images/logo.png' %}" alt="logo" />
+            <div class="topnav" id="myTopnav">
+              <a href="#Banner" >Home</a>
+              <a href="#About-Us">About Us</a>
+              <a href="#footer">Contact Us</a>
+              <a href="javascript:void(0);" class="icon" onclick="myFunction()">&#9776;</a>
+            </div>
         </div>
         <div class="regform" id="regform">
-            <h1>Signup</h1>
+            <h1>Login</h1>
         </div>
 
 
 
-
-  <form method="POST">
-    {% csrf_token %}
-    
-    {% for field in form %}
-      <p>
-        
-        {% bootstrap_field field size='small' show_label=False layout='inline'%}
-        {% comment %} {% if field.help_text %}
-          <small style="color: grey">{{ field.help_text }}</small>
-        {% endif %} {% endcomment %}
-        {% for error in field.errors %}
-          <p style="color: red">{% bootstrap_messages error%}</p>
-        {% endfor %}
-      </p>
-    {% endfor %}
-    {% bootstrap_button Signup button_type="submit" %}
-    
-
-  </form>
-  <div id="sideNav">                
+        <form method="POST">
+          {% csrf_token %}
+          
+          {% for field in form %}
+            <p>
+              
+              {% bootstrap_field field size='small' show_label=False layout='inline'%}
+              {% comment %} {% if field.help_text %}
+                <small style="color: grey">{{ field.help_text }}</small>
+              {% endif %} {% endcomment %}
+              {% for error in field.errors %}
+                <p style="color: red">{% bootstrap_messages error%}</p>
+              {% endfor %}
+            </p>
+          {% endfor %}
+          {% bootstrap_button Signup button_type="submit" %}
+          
+        <div id="sideNav">                
     <nav>
       <ul>
         <li><a href="#regform" >Login Form</a></li>
@@ -66,6 +66,14 @@
   </div>
 
   
+<footer id ="footer">
+    <p>Contact Us</p>
+    <p><b>How to reach our services?</b></p>
+    <div class="social">
+      <a href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://www.linkedin.com/"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+</footer>
 
 <!--the following is our scripts -->
 <script>           
@@ -92,5 +100,3 @@ menuButton.onclick = function(){
 </html>
 
 {% endblock %}
-
-{% include 'Pages/footer.html'%}

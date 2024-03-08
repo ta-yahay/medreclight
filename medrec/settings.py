@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-pbin@9c@xaie3!956(dw5(gfu3-95n6d90nq4$xb==3e)'
 # CSRF_TRUSTED_ORIGINS=['https://'+ os.environ['WEBSITE_HOSTNAME']]
 
 DEBUG = True
-ALLOWED_HOSTS =['https://'+ os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
-CSRF_TRUSTED_ORIGINS = ['https://'+ os.environ['WEBSITE_HOSTNAME']]if 'WEBSITE_HOSTNAME' in os.environ else []
+ALLOWED_HOSTS =['http://'+ os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
+CSRF_TRUSTED_ORIGINS = ['http://'+ os.environ['WEBSITE_HOSTNAME']]if 'WEBSITE_HOSTNAME' in os.environ else []
 
 # ALLOWED_HOSTS = ['http://lab3ta.azurewebsites.net/',
 #  'http://lab3ta.azurewebsites.net',
