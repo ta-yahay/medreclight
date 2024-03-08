@@ -3,7 +3,7 @@ import pandas
 from django.views.generic import ListView
 from django.contrib.auth import authenticate
 from Readings.forms import BP_form,Glucose_form
-from .models import BloodP , Glucose
+from .models import BloodP , Glucose,BloodP
 from accounts.models import Profile
 
 # Create your views here.
@@ -13,12 +13,11 @@ def editrecord(request):
         blood=BP_form(request.POST)
         glucose=Glucose_form(request.POST)  
         if blood.is_valid:
-            blood.user =request.user
-            blood.save()
+            user1=blood.save()
+            user1.save()
         if glucose.is_valid:
-            glucose.save()
-            glucose.user= request.user
-            glucose.save()
+            user2=glucose.save()
+            user2.save()
         BP_set=BloodP.objects.filter(user=request.user)
         glu_set=Glucose.objects.filter(user=request.user)
         BP_ordered=BP_set.order_by('date')[:500]

@@ -11,9 +11,8 @@ from django.contrib.postgres.fields import ArrayField
 from Patient.models import Patient
 from django.contrib.auth.models import User
 from django.utils.timezone import now
-
-
-
+from django.db.models.signals import post_save,pre_save
+from django.dispatch import receiver
 
 # Create your models here.   
 class BloodP(models.Model):
@@ -22,7 +21,6 @@ class BloodP(models.Model):
     date=models.DateTimeField(default=datetime.now,blank=True)
     def __repr__ (self):
         return "{}-{}-{}".format(self.user,self.value, self.date)
-
 
 
 class Glucose(models.Model):

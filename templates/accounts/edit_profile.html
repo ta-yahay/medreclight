@@ -31,15 +31,14 @@
                             </div>    
                         </div>    
                     </div> 
-                    
                     <div class="col-md-8 mt-1">
                         <div class="card mb-3 content">
                             <h1 class="m-3 pt-3">My Profile</h1>                            
                                 <form method="POST" enctype="multipart/form-data" >
                                     {% csrf_token %}   
-                                    {% bootstrap_form userform %}
-                                    {% bootstrap_form profileform %}
-                                    {% bootstrap_form patientform %}
+                                    {% bootstrap_form userform  layout='inline'%}
+                                    {% bootstrap_form profileform layout='inline' %}
+                                    {% bootstrap_form patientform layout='inline' %}
                                     {% bootstrap_button "Save" button_type="submit" %}
                                 </form>
                         </div>
