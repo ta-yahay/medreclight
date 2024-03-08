@@ -13,9 +13,7 @@ def editrecord(request):
         blood=BP_form(request.POST)
         glucose=Glucose_form(request.POST)  
         if blood.is_valid:
-            blood.save()
-            buser=request.user
-            blood.user =buser
+            blood.user =request.user
             blood.save()
         if glucose.is_valid:
             glucose.save()
